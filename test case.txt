@@ -1,0 +1,25 @@
+POST localhost:3000/api/auth/signUp
+{
+    "username": "petter",
+    "email":"petter@gmail.com",
+    "password":"123456789"
+}
+POST localhost:3000/api/auth/logIn
+{
+    "email":"petter@gmail.com",
+    "password":"123456789"
+}
+GET localhost:3000/api/user
+GET localhost:3000/api/user/profile
+PATCH localhost:3000/api/user/profile/name
+{
+    "username": "liam" //  "username": "" //BadRequest //  "username": 4654654 //BadRequest
+}
+PATCH localhost:3000/api/user/profile/email
+{
+    "email":"liam@gmail.com" //  "email": "" //BadRequest //  "email": 4654654 //BadRequest //  "email": "dhgsavfjhs" //BadRequest
+}
+PATCH localhost:3000/api/user/profile/password
+{
+    "password":"123456789" //  "password": "" //BadRequest //  "password": 4654654 //BadRequest
+}
