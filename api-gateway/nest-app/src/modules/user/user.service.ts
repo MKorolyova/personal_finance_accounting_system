@@ -1,6 +1,5 @@
 import { Injectable, Logger, Inject, BadRequestException } from '@nestjs/common';
-import { response } from 'express';
-import { catchError, empty, firstValueFrom, throwError, timeout } from 'rxjs';
+import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { UpdateUserDTO } from '../dto/updateUser.dto';
 import { UserDTO } from '../dto/user.dto';
 import { ClientProxy } from '@nestjs/microservices';
@@ -45,11 +44,10 @@ export class UserService {
         }
     }
 
-    async resetName(user: UserDTO, updateData: UpdateUserDTO) {
+    async resetName(id: string, updateData: UpdateUserDTO) {
         if (updateData.username) {
-            user.username = updateData.username;
-            this.logger.log(`User's name has been updated to: ${user.username}`);
-            return await this.send(patterns.USER.UPDATE, user);
+            this.logger.log(`User's name has been updated to: ${updateData.username}`);
+            return await this.send(patterns.USER.UPDATE,  { id, updateData });
         } else {
             throw new BadRequestException({
                     message: 'New username is required',
@@ -59,11 +57,10 @@ export class UserService {
         }
       }
       
-      async resetEmail(user: UserDTO, updateData: UpdateUserDTO) {
+      async resetEmail(id: string, updateData: UpdateUserDTO) {
         if (updateData.email) {
-          user.email = updateData.email;
           this.logger.log(`User's email has been updated`);
-          return await this.send(patterns.USER.UPDATE, user);
+          return await this.send(patterns.USER.UPDATE,  { id, updateData });
         } else {
             throw new BadRequestException({
                 message: 'New email is required',
@@ -73,11 +70,10 @@ export class UserService {
         }
       }
       
-      async resetPassword(user: UserDTO, updateData: UpdateUserDTO) {
+      async resetPassword(id: string, updateData: UpdateUserDTO) {
         if (updateData.password) {
-          user.password = updateData.password;
           this.logger.log(`User's password has been updated`);
-          return await this.send(patterns.USER.UPDATE, user);
+          return await this.send(patterns.USER.UPDATE,  { id, updateData });
         } else {
             throw new BadRequestException({
                 message: 'New password is required',
@@ -101,7 +97,7 @@ export class UserService {
     
     async findAll() {
         this.logger.log(`Fetching all users`);
-        const users = await this.send(patterns.USER.FIND_ALL, "");
+        const users = await this.send(patterns.USER.FIND_ALL, {});
         this.logger.log(`Fetched all users, count: ${Array.isArray(users) ? users.length : 'unknown'}`);
         return users;
     }

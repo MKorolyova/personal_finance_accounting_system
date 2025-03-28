@@ -36,7 +36,7 @@ export class UserController {
                 });
             }
         this.logger.log(`Resetting user name. User ID: ${request.user.id}`);
-        return this.userService.resetName(request.user, updateData);
+        return this.userService.resetName(request.user.id, updateData);
     }
 
     @UseGuards(AuthGuard)
@@ -52,7 +52,7 @@ export class UserController {
             });
         }
         this.logger.log(`Resetting user email. User ID: ${request.user.id}`);
-        return this.userService.resetEmail(request.user, updateData);
+        return this.userService.resetEmail(request.user.id, updateData);
     }
 
     @UseGuards(AuthGuard)
@@ -68,7 +68,7 @@ export class UserController {
             });
         }
         this.logger.log(`Resetting user password. User ID: ${request.user.id}`);
-        return this.userService.resetPassword(request.user, updateData);
+        return this.userService.resetPassword(request.user.id, updateData);
     }
 
     @UseGuards(AuthGuard)

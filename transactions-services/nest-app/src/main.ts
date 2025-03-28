@@ -3,9 +3,8 @@ import { AppModule } from './app.module';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 const pack = require('./../package.json');
 
-async function bootstrap() {
- 
-console.log(pack.name)
+async function bootstrap() {  
+  console.log(pack.name)
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -22,6 +21,8 @@ console.log(pack.name)
 
 }
 bootstrap();
+
+
 
 
 

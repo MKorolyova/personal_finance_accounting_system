@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UserService } from './user.service';
 import { UserDTO } from "./dto/user.dto";
 import { patterns } from '../patterns';
+import {UpdateUserDTO} from "./dto/update-user.dto";
 import {SignUpDTO} from '../user/dto/sign-up.dto';
 import {LogInDTO} from '../user/dto/log-in.dto';
 
@@ -31,7 +32,7 @@ export class UserController {
     }
 
     @MessagePattern(patterns.USER.FIND_BY_ID)
-    async findByID(id: number) {
+    async findByID(id: string) {
         this.logger.log(`Finding user with id ${id}`);
         return this.userService.findById(id);
     }
@@ -43,9 +44,9 @@ export class UserController {
     }
 
     @MessagePattern(patterns.USER.UPDATE)
-    async updateUser(user:UserDTO) {
-        this.logger.log(`Updating user with id ${JSON.stringify(user.id)}`);
-        return this.userService.updateUser(user);
+    async updateUser({ id, updateData }:{id: string, updateData: UpdateUserDTO}) {
+        this.logger.log(`Updating user with id ${JSON.stringify(id)}`);
+        return this.userService.updateUser(id, updateData);
     }
     
 }
