@@ -1,10 +1,10 @@
 import { Injectable, Logger, Inject, BadRequestException } from '@nestjs/common';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
-import { UpdateUserDTO } from '../dto/updateUser.dto';
-import { UserDTO } from '../dto/user.dto';
+import { UpdateUserDTO } from './dto/updateUser.dto';
+import { UserDTO } from './dto/user.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { patterns } from '../patterns';
-import { SignUpDTO } from '../dto/signUp.dto';
+import { SignUpDTO } from './dto/signUp.dto';
 
 @Injectable()
 export class UserService {

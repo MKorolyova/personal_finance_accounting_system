@@ -1,9 +1,9 @@
 import { Body, Controller, Post, HttpCode, HttpStatus, Logger, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDTO } from '../dto/signUp.dto';
-import { LogInDTO } from '../dto/logIn.dto';
-import { validateSignUpDTO } from '../validationShema/validatorSignUpDTO';
-import { validateLogInDTO } from '../validationShema/validatorLogInDTO';
+import { SignUpDTO } from '../user/dto/signUp.dto';
+import { LogInDTO } from '../user/dto/logIn.dto';
+import { validateSignUpDTO } from '../user/validationShema/validatorSignUpDTO';
+import { validateLogInDTO } from '../user/validationShema/validatorLogInDTO';
 
 @Controller('auth')
 export class AuthController {

@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Patch, Delete, Body, UseGuards, Request, Logger, BadRequestException} from '@nestjs/common';
 import { TransactionService } from './transaction.service';
-import { TransactionDTO } from '../dto/transaction.dto';
+import { TransactionDTO } from './dto/transaction.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { validateTransactionDTO } from '../validationShema/validatorTransactionDTO';
-import { TransactionFiltersDTO } from '../dto/transactionFilters.dto';
-import { validateTransactionFiltersDTO } from '../validationShema/validatorTransactionFiltersDTO';
+import { validateTransactionDTO } from './validationSchema/validatorTransactionDTO';
+import { TransactionFiltersDTO } from './dto/transactionFilters.dto';
+import { validateTransactionFiltersDTO } from './validationSchema/validatorTransactionFiltersDTO';
 import { request } from 'http';
 
 @Controller('transaction')

@@ -1,8 +1,8 @@
 export class GoalDTO {
     id: string;
-    target_amount: number;
-    current_amount: number;
-    goal_name: string;
+    targetAmount: number;
+    currentAmount: number;
+    goalName: string;
     status: string;
     deadline: Date;
 }

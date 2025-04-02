@@ -1,8 +1,8 @@
 import { Controller, Get, Patch, Delete, Body, UseGuards, Request, ValidationPipe, Logger, BadRequestException} from '@nestjs/common';
 import { UserService } from './user.service';
-import {UpdateUserDTO} from '../dto/updateUser.dto';
+import {UpdateUserDTO} from './dto/updateUser.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { validateUpdateUserDTO } from '../validationShema/validatorUpdateUserDTO';
+import { validateUpdateUserDTO } from './validationShema/validatorUpdateUserDTO';
 //ValidationPipe
 
 @Controller('user')

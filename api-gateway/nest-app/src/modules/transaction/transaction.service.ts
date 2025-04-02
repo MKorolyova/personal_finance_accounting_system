@@ -2,9 +2,9 @@ import { Injectable, Logger, Inject, BadRequestException } from '@nestjs/common'
 import { catchError, empty, firstValueFrom, throwError, timeout } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { patterns } from '../patterns';
-import { TransactionDTO } from '../dto/transaction.dto';
-import { UserDTO } from '../dto/user.dto';
-import { TransactionFiltersDTO } from '../dto/transactionFilters.dto';
+import { TransactionDTO } from './dto/transaction.dto';
+import { UserDTO } from '../user/dto/user.dto';
+import { TransactionFiltersDTO } from './dto/transactionFilters.dto';
 @Injectable()
 export class TransactionService {
 

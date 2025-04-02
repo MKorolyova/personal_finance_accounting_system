@@ -10,13 +10,13 @@ const schemaGoalDTO = {
     type: "object",
     properties: {
         id: { type: "string" },
-        target_amount: { type: "number" },
-        current_amount: { type: "number" },
-        goal_name: { type: "string"},
+        targetAmount: { type: "number" },
+        currentAmount: { type: "number" },
+        goalName: { type: "string"},
         status: { type: "string", "enum": goalStatus},
         deadline: {"type": "string", "format": "date"}
     },
-    required: ["target_amount", "current_amount", "goal_name", "status", "deadline"],
+    required: ["targetAmount", "currentAmount", "goalName", "status", "deadline"],
     additionalProperties: false
 };
 
