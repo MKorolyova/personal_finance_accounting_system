@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, UseGuards, Request, Logger, BadRequestException} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, UseGuards, Request, Logger, BadRequestException, Param} from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { TransactionDTO } from './dto/transaction.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -6,11 +6,17 @@ import { validateTransactionDTO } from './validationSchema/validatorTransactionD
 import { TransactionFiltersDTO } from './dto/transactionFilters.dto';
 import { validateTransactionFiltersDTO } from './validationSchema/validatorTransactionFiltersDTO';
 import { request } from 'http';
+import { GoalService } from '../goal/goal.service';
+import { GoalDTO } from '../goal/dto/goal.dto';
+import { UpdateGoalDTO } from '../goal/dto/updateGoal.dto';
 
 @Controller('transaction')
 @UseGuards(AuthGuard)
 export class TransactionController {
-    constructor(private readonly transactionService: TransactionService) {}
+    constructor(
+        private readonly transactionService: TransactionService,
+        private readonly goalService: GoalService
+    ) {}
     private readonly logger = new Logger(TransactionController.name);
 
     @Get('') // GET /transaction/
@@ -41,8 +47,9 @@ export class TransactionController {
     }
 
     @Post('') // POST /transaction
-    createTransaction(@Request() request, @Body() transactionData: TransactionDTO){
-        const errorMessage = validateTransactionDTO(transactionData);
+    async createTransaction(@Request() request, @Body() transactionData: TransactionDTO){
+        const userGoals = await this.goalService.findAll(request.user);
+        const errorMessage = validateTransactionDTO(transactionData, userGoals);
             if (errorMessage) {
                 this.logger.warn(`Transaction data validation failed: ${JSON.stringify(errorMessage)}`);
                 throw new BadRequestException({
@@ -51,12 +58,21 @@ export class TransactionController {
                     statusCode: 400
                 });
             }
+
+        for (const goal of userGoals) {
+            if (transactionData.category === goal.goalName) {
+                this.logger.log(`Updating user's goal current amount ${JSON.stringify(goal)}`);
+                this.goalService.addToCurrentAmount(goal.id, transactionData);
+                break;
+            }
+        }
+            
         this.logger.log(`Creating new user's transaction ${JSON.stringify(transactionData)}`);
         return this.transactionService.createTransaction(request.user, transactionData);
     }
 
-    @Delete('') // DELETE /transaction
-    deleteTransaction(@Body() { id }:{id: string}){
+    @Delete(':id') // DELETE /transaction/:id
+    deleteTransaction(@Param('id') id: string){
         this.logger.log(`Deleting user's transaction ${id}`);//${JSON.stringify(id)}
         return this.transactionService.deleteTransaction(id);
     }

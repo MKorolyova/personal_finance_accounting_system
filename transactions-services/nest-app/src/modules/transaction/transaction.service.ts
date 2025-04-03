@@ -28,13 +28,14 @@ export class TransactionService {
 
 
     async deleteTransaction(id: string): Promise<any> {
-    const deletedUser = await this.findById(id);
-    if (!deletedUser) {
+    const deletedTransaction = await this.findById(id);
+    if (!deletedTransaction) {
         this.logger.warn(`User with ID: ${id} not found`);
         throw new RpcException('User not found');
     }
     this.logger.log(`User with ID: ${id} has been deleted`);
-    return this.transactionRepository.delete(id);
+    this.transactionRepository.delete(id);
+    return deletedTransaction;
     }
 
 
@@ -70,14 +71,6 @@ export class TransactionService {
       transactionFiltersData.transactionEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999);
       query.andWhere('transaction.transactionDate <= :transactionEndDate', { transactionEndDate: transactionFiltersData.transactionEndDate }); 
     }
-   
-
-    console.log(query.getQuery());
-
-    console.log( transactionFiltersData.transactionStartDate);
-    console.log(transactionFiltersData.transactionEndDate);
-    console.log(transactionFiltersData.type);
-
     
     return await query.getMany();
     }

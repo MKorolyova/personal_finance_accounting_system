@@ -19,7 +19,8 @@ import { UserModule } from '../user/user.module';
     }])
 ],
   controllers: [GoalController],
-  providers: [GoalService]
+  providers: [GoalService],
+  exports: [GoalService],
 })
 export class GoalModule {}
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, UseGuards, Request, Logger, BadRequestException} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, UseGuards, Request, Logger, BadRequestException,Param} from '@nestjs/common';
 import { GoalService } from './goal.service';
 import { GoalDTO } from './dto/goal.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -35,8 +35,8 @@ export class GoalController {
     }
 
 
-    @Patch('goalInfo/name') // PATCH /goal/goalInfo/name
-    resetName(@Body() updateData: UpdateGoalDTO, id: string) {
+    @Patch('goalInfo/:id/name') // PATCH /goal/goalInfo/:id/name
+    resetName(@Param('id') id: string, @Body() updateData: UpdateGoalDTO) {
         const errorMessage = validateUpdateGoalDTO(updateData);
             if (errorMessage) {
                 this.logger.warn(`Name data validation failed: ${JSON.stringify(errorMessage)}`);
@@ -50,8 +50,8 @@ export class GoalController {
         return this.goalService.resetName(id, updateData);
     }
 
-    @Patch('goalInfo/target') // PATCH /goal/goalInfo/name
-    resetTargetAmount(@Body() updateData: UpdateGoalDTO, id: string) {
+    @Patch('goalInfo/:id/target') // PATCH /goal/goalInfo/:id/target
+    resetTargetAmount(@Param('id') id: string, @Body() updateData: UpdateGoalDTO) {
         const errorMessage = validateUpdateGoalDTO(updateData);
             if (errorMessage) {
                 this.logger.warn(`Target amount data validation failed: ${JSON.stringify(errorMessage)}`);
@@ -65,8 +65,8 @@ export class GoalController {
         return this.goalService.resetTargetAmount(id, updateData);
     }
 
-    @Patch('goalInfo/current') // PATCH /goal/goalInfo/current
-    resetCurrentAmount(@Body() updateData: UpdateGoalDTO, id: string) {
+    @Patch('goalInfo/:id/current') // PATCH /goal/goalInfo/:id/current
+    resetCurrentAmount(@Param('id') id: string, @Body() updateData: UpdateGoalDTO) {
         const errorMessage = validateUpdateGoalDTO(updateData);
             if (errorMessage) {
                 this.logger.warn(`Current amount data validation failed: ${JSON.stringify(errorMessage)}`);
@@ -80,8 +80,8 @@ export class GoalController {
         return this.goalService.resetCurrentAmount(id, updateData);
     }
 
-    @Patch('goalInfo/deadline') // PATCH /goal/goalInfo/deadline
-    resetDeadline(@Body() updateData: UpdateGoalDTO, id: string) {
+    @Patch('goalInfo/:id/deadline') // PATCH /goal/goalInfo/:id/deadline
+    resetDeadline(@Param('id') id: string, @Body() updateData: UpdateGoalDTO) {
         const errorMessage = validateUpdateGoalDTO(updateData);
             if (errorMessage) {
                 this.logger.warn(`Deadline data validation failed: ${JSON.stringify(errorMessage)}`);
@@ -95,8 +95,8 @@ export class GoalController {
         return this.goalService.resetDeadline(id, updateData);
     }
 
-    @Delete('') // DELETE /transaction
-    deleteTransaction(@Body() { id }:{id: string}){
+    @Delete(':id') // DELETE /goal/:id
+    deleteTransaction(@Param('id') id: string){
         this.logger.log(`Deleting user's goal ${id}`);
         return this.goalService.deleteGoal(id);
     }

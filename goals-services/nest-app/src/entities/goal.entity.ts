@@ -1,36 +1,33 @@
 import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 
-  
-  @Entity('transaction')
-  export class Transaction {
+  @Entity('goal')
+  export class Goal {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
   
     @Column()
     userId: string; 
+
+    @Column({ type: 'decimal', scale: 2 })
+    targetAmount: number;
   
     @Column({ type: 'decimal', scale: 2 })
-    amount: number;
+    currentAmount: number;
     
-  
+    @Column({ type: 'text' })
+    goalName: string;
+
     @Column({
         type: 'enum',
-        enum: ['income', 'expense'], 
+        enum:  ['in progress', 'completed', 'failed']
       })
-      type: string;
-    
-      @Column({type: 'text'})
-      category: string;
+      status: string;
+          
+    @Column({ type: 'timestamp' })
+    deadline: Date;
 
-    @Column({ type: 'text' })
-      description: string;
-      
-      
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
-
-    @Column({ type: 'timestamp' })
-    transactionDate: Date;
   }
 

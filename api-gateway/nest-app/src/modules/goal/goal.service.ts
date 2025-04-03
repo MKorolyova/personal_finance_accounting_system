@@ -5,6 +5,7 @@ import { UpdateGoalDTO } from './dto/updateGoal.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { patterns } from '../patterns';
+import { TransactionDTO } from '../transaction/dto/transaction.dto';
 
 @Injectable()
 export class GoalService {
@@ -22,7 +23,7 @@ export class GoalService {
         const res$ = this.goalClient.send(pattern, data).pipe(
             timeout(30000),
             catchError((e: Error) => {
-                this.logger.error(`Error while sending message: ${e.message}`);
+                this.logger.error(`Error while sending message: ${JSON.stringify(e)}`);
                 return throwError(() => e);
             })
         );
@@ -43,7 +44,7 @@ export class GoalService {
         }
     }
     
-    async findAll(user:UserDTO){
+    async findAll(user:UserDTO): Promise<GoalDTO[]>{
         this.logger.log(`Fetching all user's goals. User ID: ${user.id}`);
         const goals = await this.send(patterns.GOAL.FIND_ALL, user.id);
         this.logger.log(`Fetched all user's goals, count: ${Array.isArray(goals) ? goals.length : 'unknown'}`);
@@ -52,7 +53,7 @@ export class GoalService {
 
     async createGoal(user:UserDTO, goalData:GoalDTO){
         this.logger.log(`Creating new user's goal ${JSON.stringify(goalData)}`);
-        return await this.send(patterns.TRANSACTION.CREATE, { id: user.id, goalData });
+        return await this.send(patterns.GOAL.CREATE, { id: user.id, goalData });
     }
 
     async deleteGoal(id:string){
@@ -111,5 +112,12 @@ export class GoalService {
                     statusCode: 400
             });
         }
+    }
+
+    async addToCurrentAmount(id: string, transactionData:TransactionDTO) {
+
+        this.logger.log(`User's goal current amount has been updated to: ${transactionData.amount}`);
+        return await this.send(patterns.GOAL.ADD_TO_CURRENT_AMOUNT,  { id, amount:transactionData.amount });
+
     }
 }

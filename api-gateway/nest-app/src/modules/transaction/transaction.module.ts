@@ -3,11 +3,13 @@ import { TransactionController } from './transaction.controller';
 import { Transport, ClientsModule } from '@nestjs/microservices';
 import { TransactionService } from './transaction.service';
 import { UserModule } from '../user/user.module';
+import { GoalModule } from '../goal/goal.module';
 
 
 @Module({
   imports: [
     UserModule,
+    GoalModule,
 
     ClientsModule.register([{
         name: "TRANSACTION_SERVICE",
