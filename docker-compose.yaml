@@ -11,17 +11,19 @@ services:
     environment:
       - NODE_ENV=development
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - JWT_SECRET=secret
+      - JWT_EXPIRES_IN=1d
     depends_on:
       - rabbitmq
     stdin_open: true
     tty: true
 
-  user-services:
-    container_name: user-service
+  users-services:
+    container_name: users-service
     image: node:20-bookworm
     working_dir: /usr/src/app
     volumes:
-      - ./user-services:/usr/src/app
+      - ./users-services:/usr/src/app
     ports:
       - "3001:3001"
     environment:
@@ -30,7 +32,7 @@ services:
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
-      - DB_NAME=mydb
+      - DB_NAME=users
       - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       - postgres
@@ -52,7 +54,7 @@ services:
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
-      - DB_NAME=mydb
+      - DB_NAME=transactions
       - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       - postgres
@@ -74,7 +76,7 @@ services:
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
-      - DB_NAME=mydb
+      - DB_NAME=goals
       - RABBITMQ_URL=amqp://rabbitmq:5672
     depends_on:
       - postgres
@@ -88,11 +90,11 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydb
     ports:
       - "5432:5432"
     volumes:
       - ./pg_data:/var/lib/postgresql/data
+      - ./init_pg:/docker-entrypoint-initdb.d
 
   rabbitmq:
     container_name: rebbitmq

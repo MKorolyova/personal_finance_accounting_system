@@ -15,7 +15,7 @@ import { GoalModule } from '../goal/goal.module';
         name: "TRANSACTION_SERVICE",
         transport: Transport.RMQ, 
         options: {
-            urls: [process.env.RABBITMQ_URL || "amqp://rabbitmq:5672" ], 
+            urls: [process.env.RABBITMQ_URL as string ], 
             queue: 'transaction-service',
             queueOptions: { durable: false }
         }

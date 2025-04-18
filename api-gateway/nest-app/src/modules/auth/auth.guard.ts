@@ -27,7 +27,7 @@ async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
 
         this.logger.log(`Received JWT token for verification: ${token}`);
-        const payload = await this.jwtService.verifyAsync(token,{ secret: "secret" } );
+        const payload = await this.jwtService.verifyAsync(token,{ secret: process.env.JWT_SECRET } );
         this.logger.log(`Finding user by ID: ${payload.id}`);
         const user = await this.userService.findUserById(payload.id)
 

@@ -9,10 +9,10 @@ import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm
     @Column({ unique: true })
     email: string;
   
-    @Column({ unique: true })
+    @Column()
     password: string;
   
-    @Column({ unique: true })
+    @Column()
     username: string;
       
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

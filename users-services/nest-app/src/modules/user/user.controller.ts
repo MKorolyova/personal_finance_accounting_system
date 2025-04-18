@@ -32,7 +32,7 @@ export class UserController {
     }
 
     @MessagePattern(patterns.USER.FIND_BY_ID)
-    async findByID(id: string) {
+    async findById(id: string) {
         this.logger.log(`Finding user with id ${id}`);
         return this.userService.findById(id);
     }
