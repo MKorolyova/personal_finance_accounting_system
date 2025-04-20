@@ -3,6 +3,6 @@ import { UserModule } from './user/user.module';
 import {OrmModule} from './orm/orm.module'
 
 @Module({
-  imports: [UserModule, OrmModule],
+  imports: [UserModule],
 })
 export class ModulesModule {}

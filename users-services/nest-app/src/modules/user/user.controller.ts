@@ -13,6 +13,14 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
     private readonly logger = new Logger(UserController.name);
 
+
+    @MessagePattern('ping')
+        pingHandler() {
+        return 'pong';
+    }
+
+
+
     @MessagePattern(patterns.USER.SIGN_UP)
     async signUp(signUpData: SignUpDTO) {
         this.logger.log(`Creating user with data ${JSON.stringify(signUpData)}`);
