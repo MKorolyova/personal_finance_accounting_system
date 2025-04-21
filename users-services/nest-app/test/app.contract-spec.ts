@@ -5,15 +5,23 @@ import { Transport } from '@nestjs/microservices';
 import { ClientProxy, ClientProxyFactory } from '@nestjs/microservices';
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Client as PgClient } from 'pg';
 import { OrmModule } from '../src/modules/orm/orm.module';
 import { Wait } from 'testcontainers';
+import { patterns } from '../src/modules/patterns';
+import * as bcrypt from 'bcrypt';
+import { UserTestDTO } from '../src/modules/user/dtoTest/UserTestDTO';
+import { SignUpTestDTO } from '../src/modules/user/dtoTest/SignUpTestDTO';
+import { UserUpdatedNameTestDTO } from '../src/modules/user/dtoTest/UserUpdatedNameTestDTO';
+import { UserUpdatedEmailTestDTO } from '../src/modules/user/dtoTest/UserUpdatedEmailTestDTO';
+import { UserUpdatedPasswordTestDTO } from '../src/modules/user/dtoTest/UserUpdatedPasswordTestDTO';
+import { UserDTO } from '../src/modules/user/dto/user.dto';
 
- describe('AppController (Microservice)', () => {
+ describe('Contract Testing', () => {
 
     let app: INestMicroservice;
     let client: ClientProxy;
     let container;
-
   
     beforeAll(async () => {
 
@@ -41,8 +49,8 @@ import { Wait } from 'testcontainers';
         synchronize: true,
         logging: ['warn', 'error'],
         cache: false,
-        entities: [__dirname + '/../../entities/*.entity.{js,ts}'],
-        migrations: [__dirname + '/../../migrations/*.{js,ts}'],
+        entities: [__dirname + '../../src/entities/*.entity.{js,ts}'],
+        migrations: [__dirname + '../../src/migrations/*.{js,ts}'],
       })
 
       const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -90,15 +98,44 @@ import { Wait } from 'testcontainers';
         
     });
   
-    it('should respond to a test pattern', async () => {
-      const response = await client
-        .send('ping', {}) 
+
+    it('should sign up a new user', async () => {
+      const signUpData = new SignUpTestDTO();
+    
+      const actual_result = await client
+        .send(patterns.USER.SIGN_UP, signUpData)
         .toPromise();
-  
-      expect(response).toBe('pong'); 
+      
+      expect(actual_result).toBeDefined();
+      expect(actual_result).toHaveProperty('id');
+      expect(actual_result.username).toBe(signUpData.username);
+      expect(actual_result.email).toBe(signUpData.email);
+      expect(actual_result).toHaveProperty('password');
+      const isPasswordValid = await bcrypt.compare(signUpData.password, actual_result.password);
+      expect(isPasswordValid).toBe(true);
+
     });
+
+
+    it('should find a user by email', async () => {
+      const userToFind = new UserTestDTO();
+
+      const actual_result = await client
+        .send(patterns.USER.FIND_BY_EMAIL, userToFind.email)
+        .toPromise();
+    
+      expect(actual_result).toBeDefined();
+      expect(actual_result).toHaveProperty('id');
+      expect(actual_result.username).toBe(userToFind.username);
+      expect(actual_result.email).toBe(userToFind.email);
+      expect(actual_result).toHaveProperty('password');
+      const isPasswordValid = await bcrypt.compare(userToFind.password, actual_result.password);
+      expect(isPasswordValid).toBe(true);
+    });
+
   });
   
+
 
 
 
