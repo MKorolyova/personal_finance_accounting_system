@@ -1,5 +1,22 @@
 services:
 
+  front-end:
+    container_name: front-end
+    image: node:20-bookworm
+    working_dir: /usr/src/app
+    volumes:
+      - ./front-end:/usr/src/app
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - API_GATEWAY_PORT=3000
+    depends_on:
+      - api-gateway
+    stdin_open: true
+    tty: true
+
   api-gateway:
     container_name: api-gateway
     image: node:20-bookworm

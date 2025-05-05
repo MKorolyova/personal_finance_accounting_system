@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Goal } from 'src/entities/goal.entity';
 import { GoalDTO } from './dto/goal.dto';
 import { UpdateGoalDTO } from './dto/updateGoal.dto';
+import { CreateGoalDTO } from './dto/createGoal.dto';
 
 @Injectable()
 export class GoalService {
@@ -37,11 +38,11 @@ export class GoalService {
         return deletedGoal
     }
 
-    async createGoal(id: string, goalData: GoalDTO): Promise<any> {
+    async createGoal(id: string, createGoalData: CreateGoalDTO): Promise<any> {
 
       const $newTransaction = this.goalRepository.create({
         userId: id,
-        ...goalData,
+        ...createGoalData,
       });
   
       const newTransaction = await this.goalRepository.save($newTransaction);
@@ -49,17 +50,17 @@ export class GoalService {
       return newTransaction; 
     }
 
-    async updateGoal(id:string, updateData:UpdateGoalDTO){
-        const existingGoal = await this.findById(id);
+    async updateGoal(updateGoalData:UpdateGoalDTO){
+        const existingGoal = await this.findById(updateGoalData.id);
         if (!existingGoal) {
           throw new RpcException('Goal not found');
         }
-        this.logger.log(`Updating goal with data: ${JSON.stringify(updateData)}`);
+        this.logger.log(`Updating goal with data: ${JSON.stringify(updateGoalData)}`);
 
         this.logger.log(`Goal with ID: ${existingGoal.id} has been updated`);
         return this.goalRepository.save({
           ...existingGoal,
-          ...updateData
+          ...updateGoalData
         });
     }
 

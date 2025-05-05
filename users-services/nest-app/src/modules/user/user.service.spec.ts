@@ -37,7 +37,7 @@ describe('UserService', () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks(); // очищает всё: вызовы, реализации, spies
+    jest.resetAllMocks(); 
   });
 
 

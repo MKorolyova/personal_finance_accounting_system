@@ -3,6 +3,6 @@ export class TransactionFiltersDTO {
     higherThenAmount?: number;
     type?: string[];
     category?: string[]; 
-    transactionStartDate?: Date;
-    transactionEndDate?: Date ;
+    transactionStartDate?: string;
+    transactionEndDate?: string ;
 }

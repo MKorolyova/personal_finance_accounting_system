@@ -7,7 +7,7 @@ const pack = require('./../package.json');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
-  
+
   // connect to rabbitmq
   app.connectMicroservice({
     transport: Transport.RMQ,
@@ -18,6 +18,6 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();

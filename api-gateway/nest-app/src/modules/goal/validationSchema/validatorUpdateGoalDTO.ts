@@ -14,7 +14,7 @@ const schemaUpdateGoalDTO = {
         currentAmount: { type: "number" },
         goalName: { type: "string"},
         status: { type: "string", "enum": goalStatus},
-        deadline: {"type": "string", "format": "date"}
+        deadline: { type:"string", format: "date-time"}
     },
     additionalProperties: false
 };

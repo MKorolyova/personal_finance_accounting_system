@@ -4,6 +4,7 @@ import { patterns } from '../patterns';
 import { GoalService } from './goal.service';
 import { GoalDTO } from './dto/goal.dto';
 import { UpdateGoalDTO } from './dto/updateGoal.dto';
+import { CreateGoalDTO } from './dto/createGoal.dto';
 
 @Controller('goal')
 export class GoalController {
@@ -12,9 +13,9 @@ export class GoalController {
     private readonly logger = new Logger(GoalController.name);
 
     @MessagePattern(patterns.GOAL.CREATE)
-    async createGoal({ id, goalData }:{id: string, goalData: GoalDTO}) {
-        this.logger.log(`Creating user's goal ${JSON.stringify(goalData)}. User ID: ${JSON.stringify(id)}`);
-        return this.goalService.createGoal(id, goalData);
+    async createGoal({ id, createGoalData }:{id: string, createGoalData: CreateGoalDTO}) {
+        this.logger.log(`Creating user's goal ${JSON.stringify(createGoalData)}. User ID: ${JSON.stringify(id)}`);
+        return this.goalService.createGoal(id, createGoalData);
     }
 
     @MessagePattern(patterns.GOAL.DELETE)
@@ -32,9 +33,9 @@ export class GoalController {
     }
 
     @MessagePattern(patterns.GOAL.UPDATE)
-    async updateGoal({ id, updateData }:{id: string, updateData: UpdateGoalDTO}){
-          this.logger.log(`Updating goal with id ${JSON.stringify(id)}`);
-          return this.goalService.updateGoal(id, updateData);
+    async updateGoal(updateGoalData: UpdateGoalDTO){
+          this.logger.log(`Updating goal with id ${JSON.stringify(updateGoalData.id)}`);
+          return this.goalService.updateGoal(updateGoalData);
     }
 
     @MessagePattern(patterns.GOAL.ADD_TO_CURRENT_AMOUNT)

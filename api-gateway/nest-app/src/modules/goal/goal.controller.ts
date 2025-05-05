@@ -6,6 +6,8 @@ import { validateGoalDTO } from './validationSchema/validatorGoalDTO';
 import { request } from 'http';
 import { validateUpdateGoalDTO } from './validationSchema/validatorUpdateGoalDTO';
 import { UpdateGoalDTO } from './dto/updateGoal.dto';
+import { CreateGoalDTO } from './dto/createGoal.dto';
+import { validateCreateGoalDTO } from './validationSchema/validatorCreateGoalDTO';
 
 @UseGuards(AuthGuard)
 @Controller('goal')
@@ -20,8 +22,8 @@ export class GoalController {
     }
 
     @Post('') // POST /goal
-    createGoal(@Request() request, @Body() goalData: GoalDTO){
-        const errorMessage = validateGoalDTO(goalData);
+    createGoal(@Request() request, @Body() createGoalData: CreateGoalDTO){
+        const errorMessage = validateCreateGoalDTO(createGoalData);
             if (errorMessage) {
                 this.logger.warn(`goal data validation failed: ${JSON.stringify(errorMessage)}`);
                 throw new BadRequestException({
@@ -30,69 +32,24 @@ export class GoalController {
                     statusCode: 400
                 });
             }
-        this.logger.log(`Creating new user's goal ${JSON.stringify(goalData)}`);
-        return this.goalService.createGoal(request.user, goalData);
+        this.logger.log(`Creating new user's goal ${JSON.stringify(createGoalData)}`);
+        return this.goalService.createGoal(request.user, createGoalData);
     }
 
 
-    @Patch('goalInfo/:id/name') // PATCH /goal/goalInfo/:id/name
-    resetName(@Param('id') id: string, @Body() updateData: UpdateGoalDTO) {
-        const errorMessage = validateUpdateGoalDTO(updateData);
+    @Patch('update') // PATCH /goal/update
+    updateGoal(@Body() updateGoalData: UpdateGoalDTO) {
+        const errorMessage = validateUpdateGoalDTO(updateGoalData);
             if (errorMessage) {
-                this.logger.warn(`Name data validation failed: ${JSON.stringify(errorMessage)}`);
+                this.logger.warn(`Up date goal data validation failed: ${JSON.stringify(errorMessage)}`);
                 throw new BadRequestException({
                     message: errorMessage,
                     error: "Bad request",
                     statusCode: 400
                 });
             }
-        this.logger.log(`Resetting goal name. Goal ID: ${id}`);
-        return this.goalService.resetName(id, updateData);
-    }
-
-    @Patch('goalInfo/:id/target') // PATCH /goal/goalInfo/:id/target
-    resetTargetAmount(@Param('id') id: string, @Body() updateData: UpdateGoalDTO) {
-        const errorMessage = validateUpdateGoalDTO(updateData);
-            if (errorMessage) {
-                this.logger.warn(`Target amount data validation failed: ${JSON.stringify(errorMessage)}`);
-                throw new BadRequestException({
-                    message: errorMessage,
-                    error: "Bad request",
-                    statusCode: 400
-                });
-            }
-        this.logger.log(`Resetting goal target amount. Goal ID: ${id}`);
-        return this.goalService.resetTargetAmount(id, updateData);
-    }
-
-    @Patch('goalInfo/:id/current') // PATCH /goal/goalInfo/:id/current
-    resetCurrentAmount(@Param('id') id: string, @Body() updateData: UpdateGoalDTO) {
-        const errorMessage = validateUpdateGoalDTO(updateData);
-            if (errorMessage) {
-                this.logger.warn(`Current amount data validation failed: ${JSON.stringify(errorMessage)}`);
-                throw new BadRequestException({
-                    message: errorMessage,
-                    error: "Bad request",
-                    statusCode: 400
-                });
-            }
-        this.logger.log(`Resetting goal current amount. Goal ID: ${id}`);
-        return this.goalService.resetCurrentAmount(id, updateData);
-    }
-
-    @Patch('goalInfo/:id/deadline') // PATCH /goal/goalInfo/:id/deadline
-    resetDeadline(@Param('id') id: string, @Body() updateData: UpdateGoalDTO) {
-        const errorMessage = validateUpdateGoalDTO(updateData);
-            if (errorMessage) {
-                this.logger.warn(`Deadline data validation failed: ${JSON.stringify(errorMessage)}`);
-                throw new BadRequestException({
-                    message: errorMessage,
-                    error: "Bad request",
-                    statusCode: 400
-                });
-            }
-        this.logger.log(`Resetting goal deadline. Goal ID: ${id}`);
-        return this.goalService.resetDeadline(id, updateData);
+        this.logger.log(`Resetting goal name. Goal ID: ${updateGoalData.id}`);
+        return this.goalService.updateGoal(updateGoalData);
     }
 
     @Delete(':id') // DELETE /goal/:id

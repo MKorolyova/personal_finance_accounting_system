@@ -5,7 +5,8 @@ import { UpdateGoalDTO } from './dto/updateGoal.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { patterns } from '../patterns';
-import { TransactionDTO } from '../transaction/dto/transaction.dto';
+import { CreateTransactionDTO } from '../transaction/dto/createTransaction.dto';
+import { CreateGoalDTO } from './dto/createGoal.dto';
 
 @Injectable()
 export class GoalService {
@@ -51,9 +52,9 @@ export class GoalService {
         return goals;
     }
 
-    async createGoal(user:UserDTO, goalData:GoalDTO){
-        this.logger.log(`Creating new user's goal ${JSON.stringify(goalData)}`);
-        return await this.send(patterns.GOAL.CREATE, { id: user.id, goalData });
+    async createGoal(user:UserDTO, createGoalData:CreateGoalDTO){
+        this.logger.log(`Creating new user's goal ${JSON.stringify(createGoalData)}`);
+        return await this.send(patterns.GOAL.CREATE, { id: user.id, createGoalData });
     }
 
     async deleteGoal(id:string){
@@ -62,62 +63,15 @@ export class GoalService {
         return deleteTransaction;
     }
 
-    async resetName(id:string, updateData:UpdateGoalDTO){
-        if (updateData.goalName) {
-            this.logger.log(`User's goal name has been updated to: ${updateData.goalName}`);
-            return await this.send(patterns.GOAL.UPDATE,  { id, updateData });
-        } else {
-            throw new BadRequestException({
-                    message: 'New goal name is required',
-                    error: "Bad request",
-                    statusCode: 400
-            });
-        }
+    async updateGoal(updateGoalData:UpdateGoalDTO){
+        this.logger.log(`User's goal has been updated to: ${updateGoalData}`);
+        return await this.send(patterns.GOAL.UPDATE,   updateGoalData );
     }
 
-    async resetTargetAmount(id:string, updateData:UpdateGoalDTO){
-        if (updateData.targetAmount) {
-            this.logger.log(`User's goal target amount has been updated to: ${updateData.targetAmount}`);
-            return await this.send(patterns.GOAL.UPDATE,  { id, updateData });
-        } else {
-            throw new BadRequestException({
-                    message: 'New target amount is required',
-                    error: "Bad request",
-                    statusCode: 400
-            });
-        }
-    }
+    async addToCurrentAmount(id: string, createTransactionData:CreateTransactionDTO) {
 
-    async resetCurrentAmount(id:string, updateData:UpdateGoalDTO){
-        if (updateData.currentAmount) {
-            this.logger.log(`User's goal current amount has been updated to: ${updateData.currentAmount}`);
-            return await this.send(patterns.GOAL.UPDATE,  { id, updateData });
-        } else {
-            throw new BadRequestException({
-                    message: 'New current amount is required',
-                    error: "Bad request",
-                    statusCode: 400
-            });
-        }
-    }
-
-    async resetDeadline(id:string, updateData:UpdateGoalDTO){
-        if (updateData.deadline) {
-            this.logger.log(`User's goal deadline has been updated to: ${updateData.deadline}`);
-            return await this.send(patterns.GOAL.UPDATE,  { id, updateData });
-        } else {
-            throw new BadRequestException({
-                    message: 'New deadline is required',
-                    error: "Bad request",
-                    statusCode: 400
-            });
-        }
-    }
-
-    async addToCurrentAmount(id: string, transactionData:TransactionDTO) {
-
-        this.logger.log(`User's goal current amount has been updated to: ${transactionData.amount}`);
-        return await this.send(patterns.GOAL.ADD_TO_CURRENT_AMOUNT,  { id, amount:transactionData.amount });
+        this.logger.log(`User's goal current amount has been updated to: ${createTransactionData.amount}`);
+        return await this.send(patterns.GOAL.ADD_TO_CURRENT_AMOUNT,  { id, amount:createTransactionData.amount });
 
     }
 }

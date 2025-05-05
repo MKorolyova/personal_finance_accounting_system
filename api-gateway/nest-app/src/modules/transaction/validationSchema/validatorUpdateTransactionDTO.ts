@@ -1,34 +1,34 @@
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
-import { TransactionDTO } from "../dto/transaction.dto";
+import { UpdateTransactionDTO } from "../dto/updateTransaction.dto";
 import { transactionCategories } from "./enums/transactionCategories";
 import { transactionTypes } from "./enums/transactionTypes";
 import { GoalDTO } from "src/modules/goal/dto/goal.dto";
 
 
-function getSchemaTransactionDTO(userGoals: GoalDTO[]) {
+function getSchemaUpdateTransactionDTO(userGoals: GoalDTO[]) {
     return {
         type: "object",
         properties: {
-            id: { type: "string" },
+            id: {type: "string"},
             amount: { type: "number" },
             type: { type: "string", "enum": transactionTypes },
             category: { type: "string", "enum": Array.from(new Set([...transactionCategories, ...userGoals.map(goal => goal.goalName)]))  },
             description: { type: "string" },
-            transactionDate: { type: "string", "format": "date" }
+            transactionDate: { type:"string", format: "date-time"}
         },
-        required: ["amount", "type", "category", "transactionDate"],
+        required: ["id"],
         additionalProperties: false
     };
 }
 
-export function validateTransactionDTO(transactionData: TransactionDTO, userGoals: GoalDTO[]) {
+export function validateUpdateTransactionDTO(updateTransactionData: UpdateTransactionDTO, userGoals: GoalDTO[]) {
     const ajv = new Ajv();
     addFormats(ajv);
-    const schemaTransactionDTO = getSchemaTransactionDTO(userGoals);
-    const validator = ajv.compile(schemaTransactionDTO);
+    const schemaUpdateTransactionDTO = getSchemaUpdateTransactionDTO(userGoals);
+    const validator = ajv.compile(schemaUpdateTransactionDTO);
 
-    const valid = validator(transactionData);
+    const valid = validator(updateTransactionData);
     if (!valid) {
         return validator.errors?.map(err => err.message);
     }

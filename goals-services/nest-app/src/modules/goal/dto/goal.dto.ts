@@ -4,7 +4,7 @@ export class GoalDTO {
     currentAmount: number;
     goalName: string;
     status: string;
-    deadline: Date;
+    deadline: string;
 }
 
 

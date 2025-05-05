@@ -16,7 +16,7 @@ import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm
   
     @Column({
         type: 'enum',
-        enum: ['income', 'expense'], 
+        enum: ['income', 'expense', 'goal'], 
       })
       type: string;
     
