@@ -36,7 +36,6 @@ export const UpdateGoal = ({ refreshGoals, setShowUpdateGoalForm, goal }) => {
       deadline: deadline,
 
     };
-    console.log('Updating goal:', updateGoalData);
     
     if (updateGoalData === goal){
       setShowUpdateGoalForm(false);
@@ -55,6 +54,9 @@ export const UpdateGoal = ({ refreshGoals, setShowUpdateGoalForm, goal }) => {
   return (
 
     <div className="form">
+        <button className="close-button" type="button" onClick={() => setShowUpdateGoalForm(false)}>
+          x
+        </button>
       <h2 className='form-header'>Edit Goal</h2>
       <form onSubmit={handleUpdateGoal}>
   

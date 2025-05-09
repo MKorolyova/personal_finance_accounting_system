@@ -6,7 +6,6 @@ export const GoalCard = ({goal, refreshGoals, setSelectedGoal, setShowUpdateGoal
     const handleEdit = () => {
         setSelectedGoal(goal)
         setShowUpdateGoalForm(true)
-        console.log('Edit:', goal);
     };
 
     const handleDelete = async () => {

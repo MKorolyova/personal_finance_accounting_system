@@ -14,9 +14,9 @@ function  getSchemaTransactionFiltersDTO (userGoals: GoalDTO[]) {
             lowerThenAmount: { type: "number", minimum: 0 },
             higherThenAmount: { type: "number", minimum: 0 },
             type: { type: "array", items: { type: "string", enum: transactionTypes } },
-            category: { type: "string", "enum": Array.from(new Set([...transactionCategories, ...userGoals.map(goal => goal.goalName)]))  },
-            transactionStartDate: { type:"string", format: "date-time"},
-            transactionEndDate: { type:"string", format: "date-time"}
+            category: { type: "array", items: {type: "string","enum": Array.from(new Set([...transactionCategories, ...userGoals.map(goal => goal.goalName)])) } },
+            transactionStartDate: { type:"string",  format: "date"},
+            transactionEndDate: { type:"string", format: "date"}
         },
         required: [],
         additionalProperties: false

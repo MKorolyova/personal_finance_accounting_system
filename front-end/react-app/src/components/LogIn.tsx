@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import React  from 'react';
 import {logIn} from "../api/authRequest.ts"
-export const LogIn = ({ setShowLogInForm, setShowSignUpForm, setIsAuthenticated}) => {
+import { useNavigate } from 'react-router-dom';
+
+
+
+
+export const LogIn = ({ setShowLogInForm, setShowSignUpForm, }) => {//setIsAuthenticated
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,11 +20,9 @@ export const LogIn = ({ setShowLogInForm, setShowSignUpForm, setIsAuthenticated}
     });
   
     if (response) {
-      setIsAuthenticated(true);
       setShowSignUpForm(false);
       setShowLogInForm(false);
-    } else {
-      setIsAuthenticated(false);
+      navigate('/Home', { replace: true });
     }
   };
   
@@ -33,6 +36,9 @@ export const LogIn = ({ setShowLogInForm, setShowSignUpForm, setIsAuthenticated}
   return (
 
     <div className="form">
+        <button className="close-button" type="button" onClick={() => setShowLogInForm(false)}>
+          x
+        </button>
       <h2 className='form-header'>Login</h2>
 
       <form onSubmit={handleLogin}>

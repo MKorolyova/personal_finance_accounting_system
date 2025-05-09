@@ -1,31 +1,24 @@
 
 import React  from 'react';
 import { useState, useEffect } from "react";
-import { LogIn } from "../components/LogIn.tsx";
-import { SignUp } from "../components/SignUp.tsx";
 import { AddTransaction } from "../components/AddTransaction.tsx";
 import { AddGoal } from "../components/AddGoal.tsx"
 import { getSummury } from '../api/transactions/transactionRequest.ts';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
  
-export const Home = () => {
+export const HomePrivate = () => {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access_token'));
-  const [showLogInForm, setShowLogInForm] = useState(false); 
-  const [showSignUpForm, setShowSignUpForm] = useState(false); 
   const [ShowAddTransactionForm, setShowAddTransactionForm] = useState(false); 
   const [ShowAddGoalForm, setShowAddGoalForm] = useState(false); 
   const [summary, setSummary] = useState({ incomeSum: 0, expenseSum: 0 });
+  const navigate = useNavigate();
 
 
   const handleLogout = () => {
     localStorage.removeItem('access_token'); 
-    setIsAuthenticated(false)
+    navigate('/', { replace: true });
   };
-
-  const handleShowLogInForm = (e) =>{
-    setShowLogInForm(true)
-    setShowSignUpForm(false)
-  }
 
   const handleShowAddTransactionForm = (e) =>{
     setShowAddTransactionForm(true)
@@ -46,42 +39,9 @@ export const Home = () => {
   };
   
   useEffect(() => {
-    if (isAuthenticated) {
-      refreshSummary();
-    }
-  }, [isAuthenticated]);
+    refreshSummary();
+  });
 
-  if (!isAuthenticated) {
-
-    return (
-      <main className="main">
-
-        {showLogInForm && !showSignUpForm && (
-            <LogIn  setShowLogInForm={setShowLogInForm} setShowSignUpForm={setShowSignUpForm} setIsAuthenticated={setIsAuthenticated} /> 
-        )}
-
-        {!showLogInForm && showSignUpForm && (
-            <SignUp  setShowLogInForm={setShowLogInForm} setShowSignUpForm={setShowSignUpForm} setIsAuthenticated={setIsAuthenticated}/> 
-        )}
-
-        <div className="welcome-banner">
-          <img className="welcome-banner-image" src="/finance-image.png" alt="Finance illustration" />
-
-          <div className="welcome-banner-text">
-            <h1>Manage Your Personal Finances Easily</h1>
-            <p>Track your expenses, set savings goals, and plan your future with our powerful and easy-to-use system.</p>
-            {!showLogInForm && !showSignUpForm && (
-                <button className="accent-button" onClick={handleShowLogInForm}>
-                Log In
-                </button>
-            )}
-
-          </div>
-        </div>
-      </main>
-    );
-
-  }
 
   return (
     <main className="main">

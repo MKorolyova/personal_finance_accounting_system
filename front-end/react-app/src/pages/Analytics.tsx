@@ -1,35 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
-import axios from 'axios';
 import { findWithFiltersAnalytics } from '../api/transactions/transactionRequest.ts';
+import { Filters } from '../components/Filters.tsx';
+import { TransactionFiltersDTO } from '../api/transactions/dto/transactionFilters.dto.ts';
 
 
 
 export const Analytics = () => {
   const [chartData, setChartData] = useState([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [filters, setFilters] = useState<TransactionFiltersDTO>({});
 
   useEffect(() => {
-    const refreshAnalytics = async () => {
-      const response = await findWithFiltersAnalytics({});
-      if (response) {
-        setChartData(response);
-
-        // Автоматически получим список категорий из ключей первого объекта
-        const first = response[0];
-        if (first) {
-          const keys = Object.keys(first).filter(k => k !== 'date');
-          setCategories(keys);
-        }
-      }
-    };
-
-    refreshAnalytics();
+    refreshAnalytics({});
   }, []);
+
+  const refreshAnalytics = async (filters) => {
+    const response = await findWithFiltersAnalytics(filters);
+    if (response) {
+      setChartData(response);
+
+      const first = response[0];
+      if (first) {
+        const keys = Object.keys(first).filter(k => k !== 'date');
+        setCategories(keys);
+      }
+    }
+  };
 
   return (
     <main className="main">
       <h2 style={{ textAlign: 'center' }}>Spending Over Time by Category</h2>
+
+      <div className="filter-panel">
+        < Filters filters={filters} setFilters={setFilters} />
+        <button className="accent-button" onClick={()=>refreshAnalytics(filters)}>
+          Apply Filters
+        </button>
+      </div>
 
       <div className="graph">
         <ResponsiveContainer aspect={2}>
@@ -44,7 +52,7 @@ export const Analytics = () => {
                 key={cat}
                 type="monotone"
                 dataKey={cat}
-                stroke={['#8884d8', '#82ca9d', '#ffc658', '#ff7300'][index % 4]}
+                stroke={['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#9966ff', '#ff99cc', '#99ff66', '#ff9966'][index % 8]}
                 strokeWidth={3}
                 dot={{ r: 5 }}
                 activeDot={{ r: 7 }}

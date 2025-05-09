@@ -72,6 +72,9 @@ export class GoalService {
         this.logger.log(`Increasing goal current amount by: ${amount}`);
 
         existingGoal.currentAmount = Number(existingGoal.currentAmount) + Number(amount);
+        if (existingGoal.currentAmount >= existingGoal.targetAmount){
+          existingGoal.status = 'completed';
+        }
         await this.goalRepository.save(existingGoal);
         this.logger.log(`Goal was updated. New current amount: ${existingGoal.currentAmount}`);
         return existingGoal;

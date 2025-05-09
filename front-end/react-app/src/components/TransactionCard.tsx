@@ -2,11 +2,11 @@ import React  from 'react';
 import { deleteTransaction } from '../api/transactions/transactionRequest.ts';
   export const TransactionCard = ({transaction, refreshTransactions, setSelectedTransaction, setShowUpdateTransactionForm}) => {
 
-    console.log("transaction to print",transaction )
+ 
     const handleEdit = () => {
         setShowUpdateTransactionForm(true)
         setSelectedTransaction(transaction);
-        console.log('Edit:', transaction);
+
     };
 
     const handleDelete = async () => {

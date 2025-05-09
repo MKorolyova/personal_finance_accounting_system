@@ -5,6 +5,8 @@ import { updateTransaction } from '../api/transactions/transactionRequest.ts';
 import { UpdateTransactionDTO } from '../api/transactions/dto/updateTransaction.dto.ts';
 import {transactionCategories} from "../api/transactions/enums/transactionCategories.ts"
 import {transactionTypes} from "../api/transactions/enums/transactionTypes.ts"
+import { GoalDTO } from '../api/goals/dto/goal.dto.ts';
+import { findGoals } from '../api/goals/goalRequest.ts';
 
 export const UpdateTransaction = ({ setShowUpdateTransactionForm , refreshTransactions , transaction }) => {
  
@@ -13,6 +15,20 @@ export const UpdateTransaction = ({ setShowUpdateTransactionForm , refreshTransa
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [transactionDate, setTransactionDate] = useState('');
+  const [userGoals, setUserGoals] = useState<GoalDTO[]>([]);
+  const [isGoalCategory, setIsGoalCategory] = useState(false);
+
+  useEffect(() => {
+    const fetchGoals = async () => {
+      const goals = await findGoals();
+      if (goals) {
+        setUserGoals(goals);
+      }
+    };
+  
+    fetchGoals();
+  }, []);
+
 
   useEffect(() => {
     if (transaction) {
@@ -35,7 +51,7 @@ export const UpdateTransaction = ({ setShowUpdateTransactionForm , refreshTransa
       description,
       transactionDate: transactionDate,
     };
-    console.log('Updating transaction:', updateTransactionData);
+
     
     if (updateTransactionData === transaction){
       setShowUpdateTransactionForm(false);
@@ -53,6 +69,9 @@ export const UpdateTransaction = ({ setShowUpdateTransactionForm , refreshTransa
 
   return (
     <div className="form">
+        <button className="close-button" type="button" onClick={() => setShowUpdateTransactionForm(false)}>
+          x
+        </button>
       <h2 className='form-header'>Edit Transaction</h2>
       <form onSubmit={handleUpdateTransaction}>
 
@@ -82,17 +101,37 @@ export const UpdateTransaction = ({ setShowUpdateTransactionForm , refreshTransa
           </div>
         </div>
 
-        <div className='form-item'>
+       <div className='form-item'>
           <p>Category:</p>
           <div className="button-group">
             {transactionCategories.map((c) => (
               <button
                 key={c}
                 type="button"
-                className={category === c ? 'selected-button button' : 'unselected-button button'}
-                onClick={() => setCategory(c)}
-              >
+                className={category === c && !isGoalCategory ? 'selected-button button' : 'unselected-button button'}
+                onClick={() => {
+                  setCategory(c);
+                  setType(''); 
+                  setIsGoalCategory(false);
+                }}>
                 {c}
+              </button>
+            ))}
+          </div>
+
+          <p>Goal Category:</p>
+          <div className="button-group">
+            {userGoals.map((goal) => (
+              <button
+                key={goal.goalName}
+                type="button"
+                className={category === goal.goalName &&  isGoalCategory ? 'selected-button button' : 'unselected-button button'}
+                onClick={() =>{
+                  setCategory(goal.goalName)
+                  setType('goal'); 
+                  setIsGoalCategory(true);
+                }}>
+                {goal.goalName}
               </button>
             ))}
           </div>

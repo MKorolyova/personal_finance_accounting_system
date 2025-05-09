@@ -1,6 +1,6 @@
 import axios from "axios"
-import { LogInDTO } from "../dto/logIn.dto";
-import {SignUpDTO } from "../dto/signUp.dto"
+import { LogInDTO } from "./users/dto/logIn.dto.ts";
+import {SignUpDTO } from "./users/dto/signUp.dto"
 import { handleError } from "./handleError.ts";
 
 const baseUrl = `/api/auth`;

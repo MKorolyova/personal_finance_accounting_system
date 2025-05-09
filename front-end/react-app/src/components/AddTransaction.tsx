@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { createTransaction, findWithFilters } from '../api/transactions/transactionRequest.ts';
+import { createTransaction } from '../api/transactions/transactionRequest.ts';
 import { CreateTransactionDTO } from '../api/transactions/dto/createTransaction.dto.ts';
 import {transactionCategories} from "../api/transactions/enums/transactionCategories.ts"
 import {transactionTypes} from "../api/transactions/enums/transactionTypes.ts"
@@ -15,7 +15,7 @@ export const AddTransaction = ({ setShowAddTransactionForm, refreshSummary, refr
   const [description, setDescription] = useState('');
   const [transactionDate, setTransactionDate] = useState('');
   const [userGoals, setUserGoals] = useState<GoalDTO[]>([]);
-
+  const [isGoalCategory, setIsGoalCategory] = useState(false);
 
   useEffect(() => {
     const fetchGoals = async () => {
@@ -39,10 +39,10 @@ export const AddTransaction = ({ setShowAddTransactionForm, refreshSummary, refr
       transactionDate: transactionDate,
     };
     
-    console.log('Transaction form:', transactionData);
+
     
     const response = await createTransaction(transactionData);
-    console.log("response", response)
+
      if(response){
       
       if (refreshTransactions) {
@@ -59,6 +59,9 @@ export const AddTransaction = ({ setShowAddTransactionForm, refreshSummary, refr
 
   return (
     <div className="form">
+        <button className="close-button" type="button" onClick={() => setShowAddTransactionForm(false)}>
+          x
+        </button>
       <h2 className='form-header'>New Transaction</h2>
 
       <form onSubmit={handleAddTransaction}>
@@ -80,9 +83,11 @@ export const AddTransaction = ({ setShowAddTransactionForm, refreshSummary, refr
               <button
                 key={t}
                 type="button"
-                className={type === t ? 'selected-button' : 'unselected-button'}
-                onClick={() => setType(t)}
-              >
+                className={type === t  ?  'selected-button' : 'unselected-button'}
+                onClick={() => {
+                  setType(t);
+                  setIsGoalCategory(false);
+                }}>
                 {t}
               </button>
             ))}
@@ -96,9 +101,11 @@ export const AddTransaction = ({ setShowAddTransactionForm, refreshSummary, refr
               <button
                 key={c}
                 type="button"
-                className={category === c ? 'selected-button button' : 'unselected-button button'}
-                onClick={() => setCategory(c)}
-              >
+                className={category === c && !isGoalCategory ? 'selected-button button' : 'unselected-button button'}
+                onClick={() => {
+                  setCategory(c);
+                  setIsGoalCategory(false);
+                }}>
                 {c}
               </button>
             ))}
@@ -110,9 +117,12 @@ export const AddTransaction = ({ setShowAddTransactionForm, refreshSummary, refr
               <button
                 key={goal.goalName}
                 type="button"
-                className={category === goal.goalName ? 'selected-button button' : 'unselected-button button'}
-                onClick={() => setCategory(goal.goalName)}
-              >
+                className={category === goal.goalName &&  isGoalCategory ? 'selected-button button' : 'unselected-button button'}
+                onClick={() =>{
+                  setCategory(goal.goalName)
+                  setType('goal'); 
+                  setIsGoalCategory(true);
+                }}>
                 {goal.goalName}
               </button>
             ))}

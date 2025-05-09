@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {signUp} from "../api/authRequest.ts"
+import { useNavigate } from 'react-router-dom';
 
-
-export const SignUp = ({ setShowLogInForm, setShowSignUpForm, setIsAuthenticated}) => {
+export const SignUp = ({ setShowLogInForm, setShowSignUpForm}) => {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -16,12 +17,10 @@ export const SignUp = ({ setShowLogInForm, setShowSignUpForm, setIsAuthenticated
       password:password
     })
     if (result) {
-      setIsAuthenticated(true);
       setShowSignUpForm(false);
       setShowLogInForm(false);
-    } else {
-      setIsAuthenticated(false);
-    }
+      navigate('/Home', { replace: true });
+    } 
   };
 
 
@@ -34,6 +33,9 @@ export const SignUp = ({ setShowLogInForm, setShowSignUpForm, setIsAuthenticated
   return (
     
     <div className="form">
+        <button className="close-button" type="button" onClick={() => setShowSignUpForm(false)}>
+          x
+        </button>
       <h2 className='form-header'>Sign Up</h2>
       <form onSubmit={handleSignUp}>
 

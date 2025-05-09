@@ -12,7 +12,7 @@ export const Footer = () => {
           <ul className="footer-nav-list">
 
             <li className="footer-nav-item">
-              <Link to="/" className="nav-link">
+              <Link to="/Home" className="nav-link">
                 <p className="nav-text">Home</p>
               </Link>
             </li>

@@ -8,10 +8,12 @@ import { createGoal } from '../api/goals/goalRequest.ts';
 export const AddGoal = ({ setShowAddGoalForm, refreshGoals }) => {
 
   const [targetAmount, setTargetAmount] = useState('');
-  const [currentAmount, setCurrentAmount] = useState("0"); // Default value set to 0
+  const [currentAmount, setCurrentAmount] = useState("0"); 
   const [goalName, setGoalName] = useState('');
-  const [status, setStatus] = useState('in progress'); // Default status set to "inprogress"
+  const [status, setStatus] = useState('in progress'); 
   const [deadline, setDeadline] = useState('');
+
+
 
   const handleAddGoal = async(e) => {
     e.preventDefault();
@@ -24,11 +26,11 @@ export const AddGoal = ({ setShowAddGoalForm, refreshGoals }) => {
       deadline: deadline,
     };
 
-    console.log('Goal form:', goalData);
+
   
       
     const response = await createGoal(goalData);
-    console.log("response", response)
+
      if(response){
       
       if (refreshGoals) {
@@ -37,14 +39,15 @@ export const AddGoal = ({ setShowAddGoalForm, refreshGoals }) => {
   
       setShowAddGoalForm(false);
     }
-  
-
   };
   
     
   return (
 
     <div className="form">
+        <button className="close-button" type="button" onClick={() => setShowAddGoalForm(false)}>
+          x
+        </button>
       <h2 className='form-header'>New Goal</h2>
       <form onSubmit={handleAddGoal}>
 
