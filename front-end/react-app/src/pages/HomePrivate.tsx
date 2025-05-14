@@ -40,7 +40,7 @@ export const HomePrivate = () => {
   
   useEffect(() => {
     refreshSummary();
-  });
+  },[]);
 
 
   return (

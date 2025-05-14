@@ -16,6 +16,7 @@ services:
       - api-gateway
     stdin_open: true
     tty: true
+    command: sh -c "cd react-app && npm run start"
 
   api-gateway:
     container_name: api-gateway
@@ -34,6 +35,7 @@ services:
       - rabbitmq
     stdin_open: true
     tty: true
+    command: sh -c "cd nest-app && npm run start"
 
   users-services:
     container_name: users-service
@@ -59,6 +61,7 @@ services:
       - rabbitmq
     stdin_open: true
     tty: true
+    command: sh -c "cd nest-app && npm run start"
 
   transactions-services:
     container_name: transactions-service
@@ -81,6 +84,7 @@ services:
       - rabbitmq
     stdin_open: true
     tty: true
+    command: sh -c "cd nest-app && npm run start"
 
   goals-services:
     container_name: goals-service
@@ -103,6 +107,7 @@ services:
       - rabbitmq
     stdin_open: true
     tty: true
+    command: sh -c "cd nest-app && npm run start"
 
   postgres:
     container_name: postgres
