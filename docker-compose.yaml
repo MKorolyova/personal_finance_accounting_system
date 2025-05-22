@@ -1,5 +1,17 @@
 services:
 
+  end-to-end-test:
+    container_name: end-to-end-test
+    image: mcr.microsoft.com/playwright:v1.52.0-noble
+    working_dir: /usr/src/app
+    volumes:
+      - ./end-to-end-test:/usr/src/app
+    network_mode: host
+    stdin_open: true
+    tty: true
+    depends_on:
+       - front-end
+
   front-end:
     container_name: front-end
     image: node:20-bookworm
